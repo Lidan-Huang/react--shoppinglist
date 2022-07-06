@@ -28,20 +28,29 @@ function App() {
   
 
   const updateNewItem =  async({name, price}) => {
-      await fetch(`${BASE_URL}`,{
+      const response = await fetch(`${BASE_URL}`,{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({name, price}),
-      })                                
-      .then(res => {
-        if(res.ok) return res.json()        
-      })
-      .then(res => {
-        const newRes = {...res.added, id: uuid()};
-        setData((d) => [...d, newRes]);
-      });
+      });  
+      
+      // one way to get the data with two await
+      const extractData = res => res.json();
+      const d = await extractData(response);
+
+      // use '.then' to get the data
+      // .then(res => {
+      //   if(res.ok) return res.json()        
+      // });
+      // .then(res => {
+      //   const newRes = {...res.added, id: uuid()};
+      //   setData((d) => [...d, newRes]);
+      // });
+      const newRes = {...d.added, id: uuid()};
+      setData((elems) => [...elems, newRes]);
+      console.log("new item from app:", d);
   };
 
   return (
