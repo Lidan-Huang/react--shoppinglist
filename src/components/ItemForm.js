@@ -2,8 +2,8 @@ import { useState } from "react";
 
 const DEFAULT_ITEM = {name: "", price: ""};
 
-const AddItemForm = ({ updateNewItem }) => {
-  const [formData, setFormData] = useState(DEFAULT_ITEM);
+const ItemForm = ({ updateItem, addNewItem, existData }) => {
+  const [formData, setFormData] = useState(existData || DEFAULT_ITEM);
 
   function handleChange(evt) {
     const {name, value} = evt.target;
@@ -17,12 +17,16 @@ const AddItemForm = ({ updateNewItem }) => {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    updateNewItem(formData);
+    if(existData){
+      updateItem(formData);
+    }else{
+      addNewItem(formData);
+    }
     setFormData(DEFAULT_ITEM);
   }
 
   return(
-    <form className="AddItem" onSubmit={handleSubmit}>
+    <form className="ItemForm" onSubmit={handleSubmit}>
       <label htmlFor="item-name">
         name:
       </label>
@@ -45,9 +49,11 @@ const AddItemForm = ({ updateNewItem }) => {
         onChange={handleChange}
       />  
       <br></br>
-      <button className="AddItem add-item-btn">add new item</button>
+      {existData 
+      ? <button className="ItemForm add-item-btn">Edit this item</button> 
+      : <button className="ItemForm add-item-btn">add new item</button>}
     </form>
   );
 }
 
-export default AddItemForm;
+export default ItemForm;
